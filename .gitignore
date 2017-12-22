@@ -2,3 +2,6 @@
 *.log
 *.pdf
 *.gz
+.idea/
+venv/
+tmp/
