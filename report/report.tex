@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage{wasysym}
+\usepackage{bm}
+\usepackage{geometry}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\setlength{\parindent}{0pt}
+\geometry{left=2.0cm, right=2.0cm, top=2.0cm}
+\title{SE305 Database System Technology\\Lab Project--Report\\}
+\author{Jinghuan Shang, Lei Ma, Jinlei Li}
+
+\begin{document}
+	\maketitle
+	
+	\section*{Problem}
+		Asynchronous Database Access. Client software interacts with standard SQL databases via a blocking interface like ODBC or JDBC; the client sends SQL, waits for the database to process the query, and receives an answer. A non-blocking interface would allow a single client thread to issue many parallel queries from the same thread, with potential for some impressive performance gains. This project would investigate how this would work (do the queries have to be in different transactions? what kind of modification would need to be made to the database) and would look at the possible performance gains in some typical database benchmarks or applications.
+\end{document}
