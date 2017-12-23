@@ -6,3 +6,5 @@
 venv/
 tmp/
 *.json
+*.csv
+*.txt
