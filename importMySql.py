@@ -5,6 +5,8 @@ import time
 from aiomysql import create_pool
 
 now = lambda: time.time()
+DATALEN = 5000
+STEP = 10
 
 async def exe_sql(item, lp):
 	if len(item) < 9:
@@ -64,36 +66,59 @@ def createTable():
 					reviewTime varchar(255), \
 					primary key (reviewerID));")
 	db.close()
-	print ('create table done')
+	print ('Create Table Done')
 
-def loadData():
-	STEP = 100
-	logfile = open("{}_ins_log.csv".format(STEP), "w")
+
+def countDb():
+	db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
+	cursor = db.cursor()
+	cursor.execute("select count(*) from video_games;")
+	ct = cursor.fetchone()[0]
+	# print (ct[0])
+	db.close()
+	print ('Succsessfully Inserted {}/{} Rate: {:.4}'.format(ct, DATALEN, ct/DATALEN))
+	logfile = open("{}_{}_ins_log.csv".format(STEP, DATALEN), "a")
+	logfile.write("{},{},{:.3}".format(ct, DATALEN, ct/DATALEN))
+
+
+def dropDb():
+	db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
+	cursor = db.cursor()
+	cursor.execute("drop table video_games;")
+	db.commit()
+	print ('Clear!')
+
+def insertDb():
+	logfile = open("{}_{}_ins_log.csv".format(STEP, DATALEN), "w")
 	count = 0
 	f = open("reviews_Video_Games_5_array.json")
 
 	data = json.load(f)
-	print ('load data done', len(data))
+	print ('Load Data Done.', len(data))
 	st = now()
 	lst = st
 	
-	for sti in range(0, len(data), STEP):
+	for sti in range(0, DATALEN, STEP):
 		lp = asyncio.get_event_loop()
 		tasks = [asyncio.ensure_future(exe_sql(item, lp)) for item in data[sti:sti+STEP]]
 		# print (tasks)
 		lp.run_until_complete(asyncio.wait(tasks))
 		# count += len(dones)
-		if sti % 10000 == 0:
+		if (sti + STEP) % 1000 == 0:
 			print ("{} Items Finished. Time Elapsed: {:.4}".format(sti+STEP, now() - st))
-		logfile.write("{},{:.4}\n".format(sti+STEP, now()-lst))
+			logfile.write("{},{:.4}\n".format(sti+STEP, now()-lst))
 		lst = st
 
 	# for item in data[:100]:
 	# 	insertData(item)
 	print ('All finished', now() - st)
+	logfile.close()
 
 
 createTable()
-loadData()
+insertDb()
+countDb()
+dropDb()
+
 
 
