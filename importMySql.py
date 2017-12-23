@@ -5,12 +5,15 @@ import time
 from aiomysql import create_pool
 
 now = lambda: time.time()
-DATALEN = 5000
+DATALEN = 231780
 STEP = 10
+SYNC = True
 
 async def exe_sql(item, lp):
-	if len(item) < 9:
-		return
+	# if len(item) < 9:
+	# 	print (item)
+	if not 'reviewerName' in item.keys():
+		item['reviewerName'] = ""
 	try:
 		async with create_pool(host='59.78.45.122', port=3306,
 							   user='sjh', password='123456',
@@ -27,29 +30,13 @@ async def exe_sql(item, lp):
 					await conn.commit()
 	except KeyboardInterrupt:
 		pass
-	except:
-		pass
+	except Exception as e:
+		print (e)
+		# print (item)
 	
 
 
-def insertData(item):
-	# print(len(item))
-	if len(item) < 9:
-		return
-	db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
-	cursor = db.cursor()
-	try:
-		cursor.execute("INSERT INTO video_games VALUES ('%s', '%s', '%s', '%s', '%s', %f, '%s', '%s', '%s')"
-						%(str(item['reviewerID']), str(item['asin']),
-						str(item['reviewerName']).replace("'", " ").replace('"', " "),str(item['helpful']),
-						str(item['reviewText']).replace("'", " ").replace('"', " "),float(item['overall']),
-						str(item['summary']).replace("'", " ").replace('"', " "),str(item['unixReviewTime']),
-						str(item['reviewTime'])))
-	except KeyboardInterrupt:
-		exit()
-	except:
-		pass
-	db.close()
+
 
 def createTable():
 	db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
@@ -63,8 +50,7 @@ def createTable():
 					overall double(20,10), \
 					summary varchar(255), \
 					unixReviewTime varchar(255), \
-					reviewTime varchar(255), \
-					primary key (reviewerID));")
+					reviewTime varchar(255));")
 	db.close()
 	print ('Create Table Done')
 
@@ -77,7 +63,10 @@ def countDb():
 	# print (ct[0])
 	db.close()
 	print ('Succsessfully Inserted {}/{} Rate: {:.4}'.format(ct, DATALEN, ct/DATALEN))
-	logfile = open("{}_{}_ins_log.csv".format(STEP, DATALEN), "a")
+	if SYNC:
+		logfile = open("{}_{}_ins_log_s.csv".format(STEP, DATALEN), "a")
+	else:
+		logfile = open("{}_{}_ins_log_a.csv".format(STEP, DATALEN), "a")
 	logfile.write("{},{},{:.3}".format(ct, DATALEN, ct/DATALEN))
 
 
@@ -88,8 +77,47 @@ def dropDb():
 	db.commit()
 	print ('Clear!')
 
-def insertDb():
-	logfile = open("{}_{}_ins_log.csv".format(STEP, DATALEN), "w")
+def insertDbSync():
+	logfile = open("{}_{}_ins_log_s.csv".format(STEP, DATALEN), "w")
+	count = 0
+	f = open("reviews_Video_Games_5_array.json")
+
+	data = json.load(f)
+	print ('Load Data Done.', len(data))
+	st = now()
+	lst = st
+	
+	for i, item in enumerate(data):
+		if not 'reviewerName' in item.keys():
+			item['reviewerName'] = ""
+		try:
+			db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
+			cursor = db.cursor()
+			cursor.execute("INSERT INTO video_games VALUES ('%s', '%s', '%s', '%s', '%s', %f, '%s', '%s', '%s')"
+											%(str(item['reviewerID']), str(item['asin']),
+											str(item['reviewerName']).replace("'", " ").replace('"', " "),str(item['helpful']),
+											str(item['reviewText']).replace("'", " ").replace('"', " "),float(item['overall']),
+											str(item['summary']).replace("'", " ").replace('"', " "),str(item['unixReviewTime']),
+											str(item['reviewTime'])))
+			db.commit()
+		except KeyboardInterrupt:
+			pass
+		except Exception as e:
+			print (e)
+		db.close()
+		if (i+1) % 10000 == 0:
+			print ("{} Items Finished. Time Elapsed: {:.4}".format((i+1), now() - lst))
+			logfile.write("{},{:.4}\n".format((i+1), now()-lst))
+		lst = st
+
+	# for item in data[:100]:
+	# 	insertData(item)
+	print ('All finished', now() - st)
+	logfile.close()
+
+
+def insertDbAsync():
+	logfile = open("{}_{}_ins_log_a.csv".format(STEP, DATALEN), "w")
 	count = 0
 	f = open("reviews_Video_Games_5_array.json")
 
@@ -116,9 +144,12 @@ def insertDb():
 
 
 createTable()
-insertDb()
+if SYNC:
+	insertDbSync()
+else:
+	insertDbAsync()
 countDb()
-dropDb()
+# dropDb()
 
 
 
