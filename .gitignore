@@ -8,3 +8,4 @@ tmp/
 *.json
 *.csv
 *.txt
+bare*.tex

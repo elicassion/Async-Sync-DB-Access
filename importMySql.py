@@ -86,13 +86,12 @@ def insertDbSync():
 	print ('Load Data Done.', len(data))
 	st = now()
 	lst = st
-	
+	db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
+	cursor = db.cursor()
 	for i, item in enumerate(data):
 		if not 'reviewerName' in item.keys():
 			item['reviewerName'] = ""
 		try:
-			db = pymysql.connect("59.78.45.122","sjh","123456","sjhtest" )
-			cursor = db.cursor()
 			cursor.execute("INSERT INTO video_games VALUES ('%s', '%s', '%s', '%s', '%s', %f, '%s', '%s', '%s')"
 											%(str(item['reviewerID']), str(item['asin']),
 											str(item['reviewerName']).replace("'", " ").replace('"', " "),str(item['helpful']),
@@ -104,7 +103,7 @@ def insertDbSync():
 			pass
 		except Exception as e:
 			print (e)
-		db.close()
+		# db.close()
 		if (i+1) % 10000 == 0:
 			print ("{} Items Finished. Time Elapsed: {:.4}".format((i+1), now() - lst))
 			logfile.write("{},{:.4}\n".format((i+1), now()-lst))
