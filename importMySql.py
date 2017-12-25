@@ -10,8 +10,6 @@ STEP = 10
 SYNC = True
 
 async def exe_sql(item, lp):
-	# if len(item) < 9:
-	# 	print (item)
 	if not 'reviewerName' in item.keys():
 		item['reviewerName'] = ""
 	try:
@@ -26,13 +24,11 @@ async def exe_sql(item, lp):
 										str(item['reviewText']).replace("'", " ").replace('"', " "),float(item['overall']),
 										str(item['summary']).replace("'", " ").replace('"', " "),str(item['unixReviewTime']),
 										str(item['reviewTime'])))
-					# print (item['reviewerID'])
 					await conn.commit()
 	except KeyboardInterrupt:
 		pass
 	except Exception as e:
 		print (e)
-		# print (item)
 	
 
 
