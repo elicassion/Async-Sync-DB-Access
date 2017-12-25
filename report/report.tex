@@ -346,10 +346,10 @@
 	\subsubsection{DBI}
 	DBI can be firstly regarded as a tool for developers easily manipulate the database remotely through a specific programming language. However, with the wild usage of databases, database technology were largely improved and lots of new types of databases are proposed. Moreover, programming languages are developing where some of new languages were invented. These challenged the universality of DBIs. In consequence, DBIs are extended and well designed to become a standard of the databases which most of them support and a standard of programming languages which is usually encapsulated as programming libraries for developers to interact with databases easily. Most of DBIs are programming language specified and some of them are developed based on another DBI. We do a survey and here list some DBIs we find to the best of our knowledge under the condition of familiar programming languages and databases. 
 	\begin{itemize}[\IEEEsetlabelwidth{Z}]
-		\item Java Database Connectivity Standard (JDBC) is an interface for programming language Java. Most of DBMS support the standard of JDBC, thus using Java is easier to implement the interaction with DBMS.
-		\item Open Database Connectivity (ODBC) is not programming language specified proposed by Microsoft and it is also independent to any kind of DBMS. It includes a standard of application interfaces (API) which a DBMS should provide to its users and developers. Also, SQL queries are supported to send through ODBC. It was adopted by ISO/IEC as a part of standard of SQL. ODBC is descripted and used by C/C++ in common.
-		\item ActiveX Data Objects (ADO) is an interface designed for high-level databases manipulation on Windows systems, which usually relies on driver programs of an ODBC. In the other word, it works along with ODBC.
-		\item PyMySQL, PyODBC, MySQLDB are libraries available using Python. PyODBC is an implement of ODBC in Python. MySQLDB is a module for Python connecting with MySQL. However, in Python 3, MySQLDB is no longer supported where PyMySQL, a pure Python library to access MySQL, becomes a powerful tool to access MySQL.
+		\item Java Database Connectivity Standard (JDBC)~\cite{JDBC} is an interface for programming language Java. Most of DBMS support the standard of JDBC, thus using Java is easier to implement the interaction with DBMS.
+		\item Open Database Connectivity (ODBC)~\cite{ODBC} is not programming language specified proposed by Microsoft and it is also independent to any kind of DBMS. It includes a standard of application interfaces (API) which a DBMS should provide to its users and developers. Also, SQL queries are supported to send through ODBC. It was adopted by ISO/IEC as a part of standard of SQL. ODBC is descripted and used by C/C++ in common.
+		\item ActiveX Data Objects (ADO)~\cite{ADO} is an interface designed for high-level databases manipulation on Windows systems, which usually relies on driver programs of an ODBC. In the other word, it works along with ODBC.
+		\item PyODBC, PyMySQL, MySQLDB~\cite{pyodbc,pymysql,mysqldb} are libraries available using Python. PyODBC is an implement of ODBC in Python. MySQLDB is a module for Python connecting with MySQL. However, in Python 3, MySQLDB is no longer supported where PyMySQL, a pure Python library to access MySQL, becomes a powerful tool to access MySQL.
 	\end{itemize}
 
 	\subsection{Asynchronous I/O}
@@ -391,11 +391,11 @@
 	\section{Asynchronous DBMS Access}
 	First, to implement the asynchronous programming, we should know the its mechanism and corresponding method in Python. 
 
-	Python3 supports the asynchronous programming by a library, asyncio, and keywords async and await. Keyword async is to define asynchronous functions and statements. In asynchronous function, keyword await is used to declare statements that will asynchronously execute. From the name ``await'', it is also easy to comprehend that the statement before it will be hang up after being initiated and the thread will switch to execute other ``await'' statements ``waiting'' for running. Bringing time-consuming I/O operations into consideration, once an ``await'' statement is initiated and CPU seems to be idle in the following waiting period, CPU would execute other coroutines to prevent itself from being idle. Consequently, the CPU time is used with high efficiency. 
+	Python3 supports the asynchronous programming by a library, asyncio~\cite{asyncio}, and keywords async and await. Keyword async is to define asynchronous functions and statements. In asynchronous function, keyword await is used to declare statements that will asynchronously execute. From the name ``await'', it is also easy to comprehend that the statement before it will be hang up after being initiated and the thread will switch to execute other ``await'' statements ``waiting'' for running. Bringing time-consuming I/O operations into consideration, once an ``await'' statement is initiated and CPU seems to be idle in the following waiting period, CPU would execute other coroutines to prevent itself from being idle. Consequently, the CPU time is used with high efficiency. 
 
 	Furthermore, outside the declaration of asynchronous function, an event loop is needed in the main thread. Library asyncio provides an API for defining it, which is asyncio.get\_event\_loop(). Generally, the only thing to do next is putting the asynchronous job into the loop and executing it by method loop.run\_until\_complete(task(params)), where params are parameters like any simple function. However, for multi-task situation, before we send the asynchronous events into the loop, we still need some work to arrange tasks for each coroutine. First, use asyncio.ensure\_future(task(params)) to create corresponding coroutines waiting for execution. Next, add each coroutine into a tasks list. Finally, use loop.run\_until\_complete(asyncio.wait(tasks)) to actually execute these coroutines.
 
-	As for the part of DBMS connection, it should be placed in each coroutine. Here, we find a library called aiomysql, which is based on aysncio and pymysql, providing simple API for asynchronously accessing the DBMS. Actually there is no great difference between synchronous and asynchronous access in the form of exact coding. 
+	As for the part of DBMS connection, it should be placed in each coroutine. Here, we find a library called aiomysql ~\cite{aiomysql}, which is based on aysncio and pymysql, providing simple API for asynchronously accessing the DBMS. Actually there is no great difference between synchronous and asynchronous access in the form of exact coding. 
 
 	Here we would like to present our basic framework accessing DBMS in Python code.
 	\lstset{language=python,tabsize=2}
@@ -416,7 +416,7 @@
 	\section{Experiment}
 	\subsection{Experiment Set Up}
 	In addition to the working environment we illustrate above, we give our preparation on dataset and building database. 
-	We pick the part of video game review part of \cite{Amazon}
+	We pick the part of video game review part of ~\cite{Amazon}
 	\section{Conclusion}
 	
 	

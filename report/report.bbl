@@ -21,6 +21,31 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{JDBC}
+``Jdbc,'' \url{http://www.oracle.com/technetwork/java/overview-141217.html}.
+
+\bibitem{ODBC}
+``Odbc,''
+  \url{https://docs.microsoft.com/en-us/sql/odbc/microsoft-open-database-connectivity-odbc}.
+
+\bibitem{ADO}
+``Ado,'' \url{https://msdn.microsoft.com/en-us/library/ms805098.aspx}.
+
+\bibitem{pyodbc}
+``pyodbc,'' \url{https://code.google.com/archive/p/pyodbc/}.
+
+\bibitem{pymysql}
+``pymysql,'' \url{https://pypi.python.org/pypi/PyMySQL}.
+
+\bibitem{mysqldb}
+``mysqldb,'' \url{http://mysql-python.sourceforge.net/MySQLdb.html}.
+
+\bibitem{asyncio}
+``asyncio,'' \url{https://docs.python.org/3/library/asyncio.html}.
+
+\bibitem{aiomysql}
+``aiomysql,'' \url{https://github.com/aio-libs/aiomysql}.
+
 \bibitem{Amazon}
 J.~McAuley, ``Amazon product data,''
   \url{http://jmcauley.ucsd.edu/data/amazon/}.
