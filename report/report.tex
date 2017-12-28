@@ -428,6 +428,72 @@
 
 	\subsection{Experiment Detail and Results}
 	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. 
+	In addition to the working environment we illustrate above, we give our preparation on dataset and building database. 
+	We pick the part of video game review part of ~\cite{Amazon}, and we choose the version including only 5-core reviews from each reviewer, in order to keep our database in a suitable size. 
+	
+	From the original data, we import the .json file into MySQL database. They are constructed into two relational tables, the one is \textit{reviewer(\underline{reviewerID}, reviewerName)} and \textit{review(reviewerID, asin, helpful, reviewText, overall, summary, reviewTime, unixReviewTime)}. Note that because we are concentrated on conduct experiment for the purpose of asynchronous DBMS access, the content and the exact meaning of them are not essential. The importance lies on the size and relation, which means the probability to design some time-consuming SQL queries.
+	
+	
+	\subsection{Inserting performance}
+	
+	\begin{figure}[!t]
+		\centering
+		\includegraphics[width=6.5in]{fig/insert.png}
+		\caption{Time Consumption of Insert}
+		\label{fig_insert}
+	\end{figure}
+	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. We insert 20000 tuples in a table with synchronous and asynchronous method respectively and record the consumption of time after inserting every 8 tuples. Figure \ref{fig_insert} shows the time consumption of two method. Intuitively, asynchronous DBMS access can leverage the CPU computation resource more efficiently and save more time. The average speed of inserting with asynchronous method is 432.06 tuples per second, which gains 41.18\% improvement as compared to the synchronous method with the average speed 306.04 tuples per second. Also, it’s obvious that the speed of asynchronous DBMS access is stable.
+	
+	\subsection{Impact of the maximum number of parallel tasks}
+	
+	When accessing DBMS asynchronously, the different maximum number of parallel tasks may lead to quite different performance. Thus, we also investigate its impact in our experiments. As shown in Figure \ref{fig_select}, ...	
+	\begin{figure}[!t]
+		\centering
+		\includegraphics[width=6.5in]{fig/select.png}
+		\caption{Impact of the Maximum Number of Parallel Tasks}
+		\label{fig_select}
+	\end{figure}
+	
+	\subsection{Impact of different database operations}
+	
+	There are many different database operations. Asynchronous DBMS access may not fit everyone. In addition to \textbf{Insert}, we investigate other four typical operations, including \textbf{Select}, \textbf{Join}, \textbf{Count}, and \textbf{Update}. Table \ref{T1} shows the time consumption of these operations synchronously and asynchronously with 40 tasks. Table \ref{T2} shows the average speed of them. The performance improvement of different operations varies greatly. Selecting data and joining tables gain 185.7\% and 154.4\% improvement respectively, while aggregate functions \textbf{Count} with asynchronous method outperform synchronous access with a great improvement of 1181.6\%. Obviously, asynchronous DBMS access has strong capability to manage aggregate functions. However, as shown in Figure \ref{fig_update}, it is interesting that when we update data asynchronously, we even cost more time than synchronous method. Maybe this kind of SQL query doesn’t fit the asynchronous DBMS access.
+	
+	\begin{table}
+		\centering
+		\caption{Time Consumption of Typical Operations}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& Insert & Select & Join & Count & Update\\
+			\hline
+			synchronous & 158.3 & 86.08 & 1220 & 664.4 & 84.57\\
+			\hline
+			asynchronous & 116.1 & 30.13 & 479.6 & 51.84 & 85.43\\
+			\hline
+		\end{tabular}
+		\label{T1}
+	\end{table}
+	
+	\begin{table}
+		\centering
+		\caption{Average Speed of Typical Operations}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& Insert & Select & Join & Count & Update\\
+			\hline
+			synchronous & 0.2527 & 0.4647 & 0.0328 & 0.0602 & 0.4730\\
+			\hline
+			asynchronous & 0.3445 & 1.3276 & 0.0834 & 0.7716 & 0.4682\\
+			\hline
+		\end{tabular}
+		\label{T2}
+	\end{table}
+	
+	\begin{figure}[!t]
+		\centering
+		\includegraphics[width=6.5in]{fig/update.png}
+		\caption{Time Consumption of Update}
+		\label{fig_update}
+	\end{figure}
 	\section{Conclusion}
 	
 	
