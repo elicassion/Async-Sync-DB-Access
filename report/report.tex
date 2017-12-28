@@ -339,80 +339,80 @@
 	
 	\section{Introduction}
 	In a complete pipeline of an application system involving accessing data, the model most adopted by software development is Client-Server (C/S) model. Database Management Systems (DBMS) are established at the server end to centralize the management of data considering data security, data integrity and data consistency. On the side of user clients, data are required for systems such as transaction systems, information management systems and authority controlling systems. As a result, database interfaces (DBIs) are presented to fill the gap between clients and databases.
-
+	
 	
 	
 	\subsection{Database Access via Interface}
 	\subsubsection{DBI}
-	DBI can be firstly regarded as a tool for developers easily manipulate the database remotely through a specific programming language. However, with the wild usage of databases, database technology were largely improved and lots of new types of databases are proposed. Moreover, programming languages are developing where some of new languages were invented. These challenged the universality of DBIs. In consequence, DBIs are extended and well designed to become a standard of the databases which most of them support and a standard of programming languages which is usually encapsulated as programming libraries for developers to interact with databases easily. Most of DBIs are programming language specified and some of them are developed based on another DBI. We do a survey and here list some DBIs we find to the best of our knowledge under the condition of familiar programming languages and databases. 
+	DBI can be firstly regarded as a tool for developers easily manipulate the database remotely through a specific programming language. However, with the wild usage of databases, database technology was largely improved and lots of new types of databases are proposed. Moreover, programming languages are developing where some of the new languages were invented. These challenged the universality of DBIs. In consequence, DBIs are extended and well designed to become a standard of the databases which most of them support and a standard of programming languages which is usually encapsulated as programming libraries for developers to interact with databases easily. Most of DBIs are programming language specified and some of them are developed based on another DBI. We do a survey and here list some DBIs we find to the best of our knowledge under the condition of familiar programming languages and databases. 
 	\begin{itemize}[\IEEEsetlabelwidth{Z}]
 		\item Java Database Connectivity Standard (JDBC)~\cite{JDBC} is an interface for programming language Java. Most of DBMS support the standard of JDBC, thus using Java is easier to implement the interaction with DBMS.
-		\item Open Database Connectivity (ODBC)~\cite{ODBC} is not programming language specified proposed by Microsoft and it is also independent to any kind of DBMS. It includes a standard of application interfaces (API) which a DBMS should provide to its users and developers. Also, SQL queries are supported to send through ODBC. It was adopted by ISO/IEC as a part of standard of SQL. ODBC is descripted and used by C/C++ in common.
+		\item Open Database Connectivity (ODBC)~\cite{ODBC} is not programming language specified proposed by Microsoft and it is also independent of any kind of DBMS. It includes a standard of application interfaces (API) which a DBMS should provide to its users and developers. Also, SQL queries are supported to send through ODBC. It was adopted by ISO/IEC as a part of the standard of SQL. ODBC is described and used by C/C++ in common.
 		\item ActiveX Data Objects (ADO)~\cite{ADO} is an interface designed for high-level databases manipulation on Windows systems, which usually relies on driver programs of an ODBC. In the other word, it works along with ODBC.
 		\item PyODBC, PyMySQL, MySQLDB~\cite{pyodbc,pymysql,mysqldb} are libraries available using Python. PyODBC is an implement of ODBC in Python. MySQLDB is a module for Python connecting with MySQL. However, in Python 3, MySQLDB is no longer supported where PyMySQL, a pure Python library to access MySQL, becomes a powerful tool to access MySQL.
 	\end{itemize}
-
+	
 	\subsection{Asynchronous I/O}
 	\begin{figure}[!t]
-	\centering
-	\includegraphics[width=4.5in]{fig/sma.png}
-	\caption{Synchronous, Multi-threading and Asynchronous}
-	\label{fig_sma}
+		\centering
+		\includegraphics[width=4.5in]{fig/sma.png}
+		\caption{Synchronous, Multi-threading and Asynchronous}
+		\label{fig_sma}
 	\end{figure}
 	DBMS provides access by an open network port on operation system, the only entrance of interaction with the outside. For example, the default setting of MySQL assigns $3306$ as the number of service port. In the meanwhile, the client should connect to the port through Transmission Control Protocol (TCP) connection. Reminding the properties of TCP, a TCP connection, from its build-up to disconnection, includes three times of handshaking-connection and one notice of disconnection. 
-
-	In simple programming tasks, we design the execution of programming statements naturally, which is synchronous. The synchronous method has its advantages that easy-reading code, low cost of finding bugs and ensurance of the right order of events. However, its disadvantages are stick out when time-consuming events occur in the whole working flow. Time-consuming events, which are usually I/O operations due to the cost of communication with disk blocks and network hosts, block the working thread waiting the returning result. In this period of time, CPUs are in idle and the computation resource is wasted. If, in most cases, there are multiple I/O operations, only one operation is done at a time. Contrary to the people waiting in the line boarding a flight, asynchronous I/O allows initiating multiple tasks and waiting them simultaneously.
-
-	Figure \ref{fig_sma} illustrates the diagram of synchronous programming, multi-threading and asynchronous programming. Tasks are labeled in different colors and the height of each colored box represents how long the thread is working on the event while white boxes are periods that the thread is waiting for response. Asynchronous programming is not the same as multi-threading because it still has one thread activated rather than using more. Within the multi-threading, it remains the synchronous approach and the total waiting time hasn't been reduced, while it pays more system resources for us not waiting that long time in real world. 
-
-	Asynchronous programming has its privileges on resource-time balancing. Coroutines are used in this situation for accomplish the task. Each coroutine is responsible to one or many asynchronous events as any other coroutines. Main thread can switch between coroutines on need when creating them, arranging tasks and gathering result. Compared to multi-threading, asynchronous programming has following outperformances:
+	
+	In simple programming tasks, we design the execution of programming statements naturally, which is synchronous. The synchronous method has its advantages that easy-reading code, low cost of finding bugs and insurance of the right order of events. However, its disadvantages are stick out when time-consuming events occur in the whole working flow. Time-consuming events, which are usually I/O operations due to the cost of communication with disk blocks and network hosts, block the working thread waiting for the returning result. In this period of time, CPUs are in idle and the computation resource is wasted. If, in most cases, there are multiple I/O operations, only one operation is done at a time. Contrary to the people waiting in the line boarding a flight, asynchronous I/O allows initiating multiple tasks and waiting for them simultaneously.
+	
+	Figure \ref{fig_sma} illustrates the diagram of synchronous programming, multi-threading and asynchronous programming. Tasks are labeled in different colors and the height of each colored box represents how long the thread is working on the event while white boxes are periods that the thread is waiting for the response. Asynchronous programming is not the same as multi-threading because it still has one thread activated rather than using more. Within the multi-threading, it remains the synchronous approach and the total waiting time hasn't been reduced, while it pays more system resources for us not waiting that long time in real world. 
+	
+	Asynchronous programming has its privileges on resource-time balancing. Coroutines are used in this situation to accomplish the task. Each coroutine is responsible for one or many asynchronous events as any other coroutines. The main thread can switch between coroutines on need when creating them, arranging tasks and gathering result. Compared to multi-threading, asynchronous programming has following outperformance:
 	\begin{itemize}[\IEEEsetlabelwidth{Z}]
-	\item Less system resources required when creating coroutines compared to sub-threadings. 
-	\item Less cost on scheduling. Multi-threading entrust operation system (OS) to scheduling threads but coroutines need programmers' scheduling them manually. This leaves out unnecessary switching costs.
-	\item Making the most of advantage of each the thread. Like I/O events, CPU idles when waiting for response. Multi-threading occupies actual CPU threads and blocks other operations in corresponding threads. Coroutines are working on the single thread and one will be replaced by one of others when comes to waiting. Thus, the waiting period occurs in synchronous programming will be covered by working period in asynchronous one.
+		\item Less system resources required when creating coroutines compared to sub-threadings. 
+		\item Less cost on scheduling. Multi-threading entrust operation system (OS) to scheduling threads but coroutines need programmers' scheduling them manually. This leaves out unnecessary switching costs.
+		\item Making the most of advantage of each the thread. Like I/O events, CPU idles when waiting for the response. Multi-threading occupies actual CPU threads and blocks other operations in corresponding threads. Coroutines are working on the single thread and one will be replaced by one of the others when comes to waiting. Thus, the waiting period occurs in synchronous programming will be covered by working period in asynchronous one.
 	\end{itemize}
-
+	
 	\subsection{Our Work on Asynchronous DBMS Access}
-	Considering DBMS access is a kind of time-consuming I/O operation, we apply asynchronous programming to organize DBMS access events, which is, from the coding perpective, to explore and implement methods of asynchronous DBMS access and pay attention to some important features. 
-
+	Considering DBMS access is a kind of time-consuming I/O operation, we apply asynchronous programming to organize DBMS access events, which is, from the coding perspective, to explore and implement methods of asynchronous DBMS access and pay attention to some important features. 
+	
 	Our work on this lab project mainly contains these contributions:
 	\begin{itemize}
 		\item Establish a database from an open-source dataset
 		\item Implement a programme to access the DBMS asynchronously
 		\item Design various kinds of experiments for observing performance indexes and future improvement.
 	\end{itemize}
-
+	
 	Specifically, we are answering these questions:
 	\begin{itemize}
 		\item How to implement an asynchronous DBMS access in a specific program.
 		\item Which kinds of SQL queries fit the asynchronous DBMS access.
 		\item How much performance improvement gains from asynchronous DBMS access.
-		\item What further modifications needs for client and DBMS to adapt to asynchronous DBMS access.
+		\item What further modifications need for client and DBMS to adapt to asynchronous DBMS access.
 	\end{itemize}
 	
 	\section{Working Environment}
-	Our work is based on Python3 and MySQL5.7. The reason why we choose Python and MySQL is we are familiar with them. And Python supports the asynchronous programming which is feasible to perform the experiment. We select the video games part of Amazon review dataset as the source of data and use it to build an instance of database containing several tables.
-
+	Our work is based on Python3 and MySQL5.7. The reason why we choose Python and MySQL is we are familiar with them. And Python supports the asynchronous programming which is feasible to perform the experiment. We select the video games part of Amazon review dataset as the source of data and use it to build an instance of the database containing several tables.
+	
 	\section{Asynchronous DBMS Access}
-	First, to implement the asynchronous programming, we should know the its mechanism and corresponding method in Python. 
-
+	First, to implement the asynchronous programming, we should know its mechanism and corresponding method in Python. 
+	
 	Python3 supports the asynchronous programming by a library, \textit{asyncio}~\cite{asyncio}, and keywords \textbf{async} and \textbf{await}. Keyword \textbf{async} is to define asynchronous functions and statements. In asynchronous function, keyword await is used to declare statements that will asynchronously execute. From the name \textbf{await}, it is also easy to comprehend that the statement before it will be hang up after being initiated and the thread will switch to execute other \textbf{await} statements ``waiting'' for running. Bringing time-consuming I/O operations into consideration, once an \textbf{await} statement is initiated and CPU seems to be idle in the following waiting period, CPU would execute other coroutines to prevent itself from being idle. Consequently, the CPU time is used with high efficiency. 
-
+	
 	Furthermore, outside the declaration of asynchronous function, an event loop is needed in the main thread. Library \textit{asyncio} provides an API for defining it, which is \textit{asyncio.get\_event\_loop()}. Generally, the only thing to do next is putting the asynchronous job into the loop and executing it by method \textit{loop.run\_until\_complete(task(params))}, where \textit{params} are parameters like any simple function. However, for multi-task situation, before we send the asynchronous events into the loop, we still need some work to arrange tasks for each coroutine. First, use \textit{asyncio.ensure\_future(task(params))} to create corresponding coroutines waiting for execution. Next, add each coroutine into a tasks list. Finally, use \textit{loop.run\_until\_complete(asyncio.wait(tasks))} to actually execute these coroutines.
-
-	As for the part of DBMS connection, it should be placed in each coroutine. Here, we find a library called \textit{aiomysql} ~\cite{aiomysql}, which is based on \textit{aysncio} and \textit{pymysql}, providing simple API for asynchronously accessing the DBMS. Actually there is no great difference between synchronous and asynchronous access in the form of exact coding. 
-
+	
+	As for the part of DBMS connection, it should be placed in each coroutine. Here, we find a library called \textit{aiomysql} ~\cite{aiomysql}, which is based on \textit{aysncio} and \textit{pymysql}, providing simple API for asynchronously accessing the DBMS. Actually, there is no great difference between synchronous and asynchronous access in the form of exact coding. 
+	
 	Here we would like to present our basic framework accessing DBMS in Python code.
 	\lstset{language=python,tabsize=2}
 	\begin{lstlisting}
 	async def exe_sql(item, lp):
-		async with create_pool(host='localhost', port=3306,
-							   user='user', password='password',
-							   db='db', loop=lp) as pool:
-			async with pool.get() as conn:
-				async with conn.cursor() as cur:
-					await cur.execute(''SQL Query'')
-					await conn.commit()
+	async with create_pool(host='localhost', port=3306,
+	user='user', password='password',
+	db='db', loop=lp) as pool:
+	async with pool.get() as conn:
+	async with conn.cursor() as cur:
+	await cur.execute(''SQL Query'')
+	await conn.commit()
 	lp = asyncio.get_event_loop()
 	tasks = [asyncio.ensure_future(exe_sql(item, lp)) for item in data]
 	lp.run_until_complete(asyncio.wait(tasks))
@@ -421,18 +421,10 @@
 	By using Python3 codes above, the program has the ability to access the database asynchronously and save a large period of CPU time waiting for the result of queries. In next section, we are going to put forward our experiment methods and results, concerning on numbers about performance and analyzing what both programming and DBMS side should do to fit in the asynchronous access. 
 	\section{Experiment}
 	\subsection{Experiment Set Up}
-	In addition to the working environment we illustrate above, we give our preparation on dataset and building database. 
-	We pick the part of video game review part of ~\cite{Amazon}, and we choose the version including only 5-core reviews from each reviewer, in order to keep our database in a suitable size. 
-
-	From the original data, we import the .json file into MySQL database. They are constructed into two relational tables, the one is \textit{reviewer(\underline{reviewerID}, reviewerName)} and \textit{review(reviewerID, asin, helpful, reviewText, overall, summary, reviewTime, unixReviewTime)}. Note that because we are concentrated on conduct experiment for the purpose of asynchronous DBMS access, the content and the exact meaning of them are not essential. The importance lies on the size and relation, which means the probability to design some time-consuming SQL queries.
-
-	\subsection{Experiment Detail and Results}
-	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. 
-	In addition to the working environment we illustrate above, we give our preparation on dataset and building database. 
+	In addition to the working environment we illustrate above, we give our preparation on a dataset and building database. 
 	We pick the part of video game review part of ~\cite{Amazon}, and we choose the version including only 5-core reviews from each reviewer, in order to keep our database in a suitable size. 
 	
-	From the original data, we import the .json file into MySQL database. They are constructed into two relational tables, the one is \textit{reviewer(\underline{reviewerID}, reviewerName)} and \textit{review(reviewerID, asin, helpful, reviewText, overall, summary, reviewTime, unixReviewTime)}. Note that because we are concentrated on conduct experiment for the purpose of asynchronous DBMS access, the content and the exact meaning of them are not essential. The importance lies on the size and relation, which means the probability to design some time-consuming SQL queries.
-	
+	From the original data, we import the .json file into MySQL database. They are constructed into two relational tables, the one is \textit{reviewer(\underline{reviewerID}, reviewerName)} and \textit{review(reviewerID, asin, helpful, reviewText, overall, summary, reviewTime, unixReviewTime)}. Note that because we are concentrated on conduct experiment for the purpose of asynchronous DBMS access, the content and the exact meaning of them are not essential. The importance lies in the size and relation, which means the probability to design some time-consuming SQL queries.
 	
 	\subsection{Inserting performance}
 	
@@ -442,21 +434,59 @@
 		\caption{Time Consumption of Insert}
 		\label{fig_insert}
 	\end{figure}
-	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. We insert 20000 tuples in a table with synchronous and asynchronous method respectively and record the consumption of time after inserting every 8 tuples. Figure \ref{fig_insert} shows the time consumption of two method. Intuitively, asynchronous DBMS access can leverage the CPU computation resource more efficiently and save more time. The average speed of inserting with asynchronous method is 432.06 tuples per second, which gains 41.18\% improvement as compared to the synchronous method with the average speed 306.04 tuples per second. Also, it’s obvious that the speed of asynchronous DBMS access is stable.
+	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. We insert $ 20000 $ tuples in a table with synchronous and asynchronous method respectively and record the consumption of time after inserting every 8 tuples. Figure \ref{fig_insert} shows the time consumption of two methods. Intuitively, asynchronous DBMS access can leverage the CPU computation resource more efficiently and save more time. The average speed of inserting with the asynchronous method is $ 432.06 $ tuples per second, which gains $ 41.18\% $ improvement as compared to the synchronous method with the average speed $ 306.04 $ tuples per second. Also, it’s obvious that the speed of asynchronous DBMS access is stable.
 	
-	\subsection{Impact of the maximum number of parallel tasks}
+	\subsection{Performance Improvement and Limitation on Select Operation}
+	Option \textbf{Select} may be the most common one of database access in the real world, so it is worth to investigate how much performance improvement gain with asynchronous database access. Thus, the experiment simulates a mount of access with \textbf{Select} in synchronous and asynchronous way respectively and records the time consuming. To explore the influence and limitation of asynchronous tasks, we design experiments about different number of tasks in asynchronous access. To avoid the performance influence of database cache, the queries are generated randomly to request for different tuples. 
 	
-	When accessing DBMS asynchronously, the different maximum number of parallel tasks may lead to quite different performance. Thus, we also investigate its impact in our experiments. As shown in Figure \ref{fig_select}, ...	
 	\begin{figure}[!t]
 		\centering
 		\includegraphics[width=6.5in]{fig/select.png}
-		\caption{Impact of the Maximum Number of Parallel Tasks}
+		\caption{Time Consumption of Select with Different Number of Tasks}
 		\label{fig_select}
 	\end{figure}
 	
+	Figure \ref{fig_select} shows the time consuming of synchronous access and asynchronous access with different tasks. It can be drawn that the asynchronous access can bring performance improvement gain. And with the increased number of tasks, the performance also increases but its pace is getting slower. Maybe for \textbf{Select} option, 8 tasks could occupy all the waiting time so that the performance won't increase after that. 
+	
+	\begin{table}
+		\centering
+		\caption{Time Consumption of \textbf{Select} with Different Condition}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			Sync/Async & Queries & Tasks & Returned Tuples & Time\\
+			\hline
+			Synchronous & 200 & / & 3338732	& 432.4\\
+			\hline
+			Asynchronous & 200 & 2 & 3138212 & 221.4\\
+			\hline
+			Asynchronous & 200 & 4 & 3059651 & 154.6\\
+			\hline
+			Asynchronous & 204 & 6 & 3523492 & 135.8\\
+			\hline
+			Asynchronous & 200 & 8 & 2976721 & 132.5\\
+			\hline
+			Asynchronous & 200 & 10 & 3127633 & 121.1\\
+			\hline
+			Asynchronous & 204 & 12 & 3382936 & 117.2\\
+			\hline
+			Asynchronous & 210 & 14 & 3491832 & 123.9\\
+			\hline
+			Asynchronous & 208 & 16 & 3271681 & 105.2\\
+			\hline
+		\end{tabular}
+		\label{T1}
+	\end{table}
+	
+	Since random queries may fetch different number of tuples which may be related to the performance, we also statistic the number of them and show them on Table I. Also the concrete number of tasks, queries and time consuming are shown on the table. 
+	
+	\subsection{Updating Performance}
+	It is interesting about what is shown on Fig.4 that it costs more on \emph{UPDATE} option of asynchronous access compare to synchronous. The reason may be that the database lock the table when executing \emph{UPDATE} and the next query should wait for it. And because of the connection cost the performance decreases with asynchronous access. 
+	   
+	
+	
 	\subsection{Impact of different database operations}
 	
-	There are many different database operations. Asynchronous DBMS access may not fit everyone. In addition to \textbf{Insert}, we investigate other four typical operations, including \textbf{Select}, \textbf{Join}, \textbf{Count}, and \textbf{Update}. Table \ref{T1} shows the time consumption of these operations synchronously and asynchronously with 40 tasks. Table \ref{T2} shows the average speed of them. The performance improvement of different operations varies greatly. Selecting data and joining tables gain 185.7\% and 154.4\% improvement respectively, while aggregate functions \textbf{Count} with asynchronous method outperform synchronous access with a great improvement of 1181.6\%. Obviously, asynchronous DBMS access has strong capability to manage aggregate functions. However, as shown in Figure \ref{fig_update}, it is interesting that when we update data asynchronously, we even cost more time than synchronous method. Maybe this kind of SQL query doesn’t fit the asynchronous DBMS access.
+	There are many different database operations. Asynchronous DBMS access may not fit everyone. In addition to \textbf{Insert}, we investigate other four typical operations, including \textbf{Select}, \textbf{Join}, \textbf{Count}, and \textbf{Update}. Table \ref{T1} shows the time consumption of these operations synchronously and asynchronously with $ 40 $ tasks. Table \ref{T2} shows the average speed of them. The performance improvement of different operations varies greatly. Selecting data and joining tables gain $ 185.7\% $ and $ 154.4\% $ improvement respectively, while aggregate functions \textbf{Count} with asynchronous method outperform synchronous access with a great improvement of $ 1181.6\% $. Obviously, asynchronous DBMS access has strong capability to manage aggregate functions. However, as shown in Figure \ref{fig_update}, it is interesting that when we update data asynchronously, we even cost more time than synchronous method. Maybe this kind of SQL queries do not fit the asynchronous DBMS access.
 	
 	\begin{table}
 		\centering
@@ -495,7 +525,7 @@
 		\label{fig_update}
 	\end{figure}
 	\section{Conclusion}
-	
+	In this paper, we establish a database from an open-source dataset, and implement a program to access the DBMS asynchronously. Then, we design various kinds of experiments for observing the performance improvement of asynchronous method. We show that A non-blocking interface allowing a single client thread to issue many parallel queries from the same thread brings us impressive performance gains. Except \textbf{Update}, every kind of SQL queries with asynchronous method outperform synchronous access with a huge improvement efficiency. As for aggregate functions, the improvement is even up to $ 1181.6\% $. 
 	
 	
 	% An example of a floating figure using the graphicx package.
@@ -636,11 +666,11 @@
 	% set second argument of \begin to the number of references
 	% (used to reserve space for the reference number labels box)
 	% \begin{thebibliography}{1}
-		
-	% 	\bibitem{IEEEhowto:kopka}
-	% 	H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-	% 	0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-		
+	
+	%     \bibitem{IEEEhowto:kopka}
+	%     H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+	%     0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+	
 	% \end{thebibliography}
 	
 	
@@ -648,6 +678,12 @@
 	
 	% that's all folks
 \end{document}
+
+
+
+
+
+
 
 
 
