@@ -317,7 +317,7 @@
 	% As a general rule, do not put math, special symbols or citations
 	% in the abstract
 	\begin{abstract}
-		Asynchronous Database Access. Client software interacts with standard SQL databases via a blocking interface like ODBC or JDBC; the client sends SQL, waits for the database to process the query, and receives an answer. A non-blocking interface would allow a single client thread to issue many parallel queries from the same thread, with potential for some impressive performance gains. This project would investigate how this would work (do the queries have to be in different transactions? what kind of modification would need to be made to the database) and would look at the possible performance gains in some typical database benchmarks or applications.
+		Traditionally, client software interacts with standard SQL databases via a blocking interface. The asynchronous access is able to send many parallel queries from the same thread, with potential for some impressive performance gains. In this project, we implement the asynchronous access and conduct various experiments based on our asynchronous access method. We observe the result of our experiments, uncover problems and present possible modifications to be applied.
 	\end{abstract}
 	
 	% no keywords
@@ -434,7 +434,9 @@
 		\caption{Time Consumption of Insert}
 		\label{fig_insert}
 	\end{figure}
-	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. We insert $ 20000 $ tuples in a table with synchronous and asynchronous method respectively and record the consumption of time after inserting every 8 tuples. Figure \ref{fig_insert} shows the time consumption of two methods. Intuitively, asynchronous DBMS access can leverage the CPU computation resource more efficiently and save more time. The average speed of inserting with the asynchronous method is $ 432.06 $ tuples per second, which gains $ 41.18\% $ improvement as compared to the synchronous method with the average speed $ 306.04 $ tuples per second. Also, it’s obvious that the speed of asynchronous DBMS access is stable.
+	Interestingly, we firstly implement the asynchronous access before we establish the database. Hence, we make use of this opportunity to insert data asynchronously using our program. In this attempt, we didn't limit the number of tasks and sent the queries continuously (about $ 220,000 $ queries) which run out of memory and cause the crash. Such amount of queries also were denied by the database. So we decreased the number of tasks and inserted the tuples. We also found that the CPU usage rate is about $ 5\% $ with synchronous access while $ 40\% $ with asynchronous access. 
+	
+	After that, we furthermore conduct the experiment with the more serious method. We insert $ 20000 $ tuples in a table with synchronous and asynchronous method respectively and record the consumption of time after inserting every 8 tuples. Figure \ref{fig_insert} shows the time consumption of two methods. Intuitively, asynchronous DBMS access can leverage the CPU computation resource more efficiently and save more time. The average speed of inserting with the asynchronous method is $ 432.06 $ tuples per second, which gains $ 41.18\% $ improvement as compared to the synchronous method with the average speed $ 306.04 $ tuples per second. Also, it’s obvious that the speed of asynchronous DBMS access is stable.
 	
 	\subsection{Performance Improvement and Limitation on Select Operation}
 	Option \textbf{Select} may be the most common one of database access in the real world, so it is worth to investigate how much performance improvement gain with asynchronous database access. Thus, the experiment simulates a mount of access with \textbf{Select} in synchronous and asynchronous way respectively and records the time consuming. To explore the influence and limitation of asynchronous tasks, we design experiments about different number of tasks in asynchronous access. To avoid the performance influence of database cache, the queries are generated randomly to request for different tuples. 
@@ -525,7 +527,26 @@
 		\label{fig_update}
 	\end{figure}
 	\section{Conclusion}
-	In this paper, we establish a database from an open-source dataset, and implement a program to access the DBMS asynchronously. Then, we design various kinds of experiments for observing the performance improvement of asynchronous method. We show that A non-blocking interface allowing a single client thread to issue many parallel queries from the same thread brings us impressive performance gains. Except \textbf{Update}, every kind of SQL queries with asynchronous method outperform synchronous access with a huge improvement efficiency. As for aggregate functions, the improvement is even up to $ 1181.6\% $. 
+
+	From all of experiments above, we are able to uncover several problems related to asynchronous DBMS access:
+	\begin{itemize}
+		\item CPU and other computational resource overwhelming on a client when initiating large amount of coroutines.
+		\item Limitation in maximum TCP connections established on both a client and a DBMS. A large number of asynchronous from one thread at the same time causes some of queries are missing and ignored, even failed to establish TCP connection.
+		\item Queries jam in DBMS. Similar to the previous point, this also slows down the execution efficiency and drops out some equeries.
+		\item Query scheduling. How to arrange the order of query execution in the DBMS.
+		\item Database security. Due to the potential high frequency of sending queries, a DBMS system my be attacted by this method. 
+	\end{itemize}
+	
+	Aiming at these proposed problems, we, to the best of our knowledge, present following potential modifications applied on DBMS to address them:
+	\begin{itemize}
+		\item Enlarge the network capacity of a DBMS to insure the quantity and efficiency TCP connections.
+		\item Insure that DBMS supports multi-threading in executing queries. Ideally, one coroutine from a client corresonds one or more threads running DBMS for the alrgest working efficiency. Otherwise, single thread in DBMS will not develop the ability of asynchronous access, which acutually still remains synchronously single thread.
+		\item Apply advanced scheduling algorithms in DBMS in cooperation with asynchronous DBMS access from clien to reduce overall waiting time, even including predicting execution time of a query for better scheduling.
+		\item Optimize \textbf{Read} and \textbf{Write} locks when updating a table. We learn that there exists a technology that only locking the related part of the table when performing updates, while other unrelated transactions are not blocked.
+		\item Intelligent detection of malicious access. 
+	\end{itemize}
+	
+	To sum up, in this project, we establish a database from an open-source dataset, and implement a program to access the DBMS asynchronously. Then, we design various kinds of experiments for observing the performance improvement of asynchronous method. We show that A non-blocking interface allowing a single client thread to issue many parallel queries from the same thread brings us impressive performance gains. Except \textbf{Update}, every kind of SQL queries with asynchronous method outperform synchronous access with a huge improvement efficiency. As for aggregate functions, the improvement is even up to $ 1181.6\% $. Finally, we conclude some problems observed from out experiments and present possible solutions to address the problem.
 	
 	
 	% An example of a floating figure using the graphicx package.
@@ -634,14 +655,6 @@
 	
 	
 	% use section* for acknowledgment
-	\section*{Acknowledgment}
-	
-	
-	The authors would like to thank...
-	
-	
-	
-	
 	
 	% trigger a \newpage just before the given reference
 	% number - used to balance the columns on the last page
